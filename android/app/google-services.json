@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "832684726276",
+    "project_id": "nationsounds-abb57",
+    "storage_bucket": "nationsounds-abb57.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832684726276:android:d847b1cb953cc98b6dfd51",
+        "android_client_info": {
+          "package_name": "com.nationsounds"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832684726276-a51n1cgtqbi0akha4v0i4kc7fc1dqon4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nationsounds",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "832684726276-jusoq6k11shu6rt7i3onbcm93rqo3647.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDp-SJgjAt5WFmamDiKBN0lpYMaYzAIzP8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "832684726276-jusoq6k11shu6rt7i3onbcm93rqo3647.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
