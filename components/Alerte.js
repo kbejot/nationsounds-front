@@ -1,12 +1,35 @@
-import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, Dimensions } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, Dimensions, FlatList } from 'react-native';
+import axios from 'axios';
+import AlerteDetail from './AlerteDetail';
 
-export default class Alerte extends React.Component {
-     constructor(props) {
-        super(props);
-        this.state = {
-        }
-     }render() {
+const API = 'http://nationsoundsmspr.000webhostapp.com//wp-json/wp/v2/posts/?per_page=100';
+
+function Alerte () {
+   const [HomeAlerte, setHomeAlerte] = useState([]);
+
+ 
+useEffect(() => {
+  axios.get(API)
+    .then((res) => {
+      setHomeAlerte(res.data);
+    });
+}, []);
+
+const alerte = HomeAlerte.map((HomeAlerte) => {
+    const categories = HomeAlerte.categories
+    for (let i=0; i<categories.length; i++){
+      if (categories[i] == 34) {
+        console.log(HomeAlerte.title)
+        return (
+         <View style={styles.notifView}>
+         <Text key={HomeAlerte.id}>{HomeAlerte.title.rendered}</Text>
+         </View>
+        )
+      }  
+    }
+})
+
         return (
            <SafeAreaView style={styles.container}>
            <View>         
@@ -14,23 +37,19 @@ export default class Alerte extends React.Component {
               style={styles.notifScrollView}
               horizontal={true}
               pagingEnabled={true}
-              showsHorizontalScrollIndicator={false}
+              showsHorizontalScrollIndicator={true}
            >
-              <View style={styles.notifView}>
-                 <Text>Notif 1</Text>
-              </View>
-              <View style={styles.notifView}>
-                 <Text>Notif 2</Text>
-              </View>
-              <View style={styles.notifView}>
-                 <Text>Notif 3</Text>
-              </View>
+            {alerte}
            </ScrollView>
         </View>      
            </SafeAreaView>
         );
-     }
-  }
+}
+export default Alerte;
+
+
+     
+  
 
   const styles = StyleSheet.create({
      container: {

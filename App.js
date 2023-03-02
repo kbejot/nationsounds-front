@@ -6,9 +6,10 @@ import Maps from './components/Maps';
 import HomeScreen from './components/HomeScreen';
 import Informations from './components/Informations';
 import Programmation from './components/Programmation';
-import Programmation2 from './components/Programmation2';
-import Test from './components/Test';
+import Programmation3 from './components/Programmation3';
 import Subscribe from './components/subscribe';
+import Partenaires from './components/Partenaires';
+import AlerteDetail from './components/AlerteDetail';
 
 
 Subscribe();
@@ -47,11 +48,12 @@ export default function App() {
         drawerContent={(props) => <CustomDrawerContent {...props} />}
         >
         <Drawer.Screen name="Home" component={HomeScreen} />
+        <Drawer.Screen name="Alertes" component={AlerteDetail} />
         <Drawer.Screen name="Infos" component={Informations} />
         <Drawer.Screen name="Pogrammation" component={Programmation} />
         <Drawer.Screen name="Maps" component={Maps} />
-        <Drawer.Screen name="Pogrammation2" component={Programmation2} />
-        <Drawer.Screen name="Test" component={Test} />
+        <Drawer.Screen name="Pogrammation3" component={Programmation3} />
+        <Drawer.Screen name="Partenaires" component={Partenaires} />
       </Drawer.Navigator>
     </NavigationContainer>
       

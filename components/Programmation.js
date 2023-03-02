@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     fontSize: 35,
     fontWeight: 'bold',
     marginVertical: 8,
-    fontFamily: 'Audiowide' 
+    fontFamily: 'Audiowide-Regular',
   },
   groupes: {
     flexDirection: 'column',
