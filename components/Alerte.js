@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Dimensions, FlatList } from 'react-native';
 import axios from 'axios';
-import AlerteDetail from './AlerteDetail';
 
 const API = 'http://nationsoundsmspr.000webhostapp.com//wp-json/wp/v2/posts/?per_page=100';
 
