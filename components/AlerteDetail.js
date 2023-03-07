@@ -22,8 +22,8 @@ const alerte = HomeAlerte.map((HomeAlerte) => {
         console.log(HomeAlerte.title)
         return (
          <View>
-         <Text key={HomeAlerte.id}>{HomeAlerte.title.rendered}</Text>
-         <Text>{HomeAlerte.content.rendered}</Text>
+         <Text key={HomeAlerte.id} style={styles.title}>{HomeAlerte.title.rendered}</Text>
+         <Text style={styles.content}>{HomeAlerte.content.rendered}</Text>
          </View>
         )
       }  
@@ -37,3 +37,21 @@ const alerte = HomeAlerte.map((HomeAlerte) => {
         );
 }
 export default AlerteDetail;
+
+const styles = StyleSheet.create({
+  
+  title: {
+    textAlign: 'center',
+    color: '#FBFB79',
+    fontSize: 35,
+    marginVertical: 8,
+    fontFamily: 'Audiowide-Regular',
+  },
+  content: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontStyle: 'italic',
+    color: 'white'
+  },
+
+});

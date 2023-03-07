@@ -4,7 +4,7 @@ import { View, Button, Text, Image, StyleSheet, ScrollView, SafeAreaView } from 
 import Alerte from './Alerte';
 import Programmation from './Programmation';
 import Informations from './Informations';
-import Maps from './Maps';
+import HomeMap from './HomeMap';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
@@ -20,7 +20,7 @@ function HomeScreen() {
       <Text onPress={() => Linking.openURL(urlBilletterie) } style={styles.billetterie}>Billetterie</Text>
       <Informations />
 
-        <Maps style={styles.map} />
+      <HomeMap style={styles.map} />
 
       
     </SafeAreaView>
@@ -31,13 +31,17 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   billetterie: {
-    backgroundColor: 'white',
+    backgroundColor: 'rgb(29, 28, 33)',
     borderWidth: 2,
+    borderColor: 'rgb(251, 251, 121)',
+     color: 'rgb(251, 251, 121)',
      textAlign: 'center',
      textAlignVertical: 'center',
      fontSize: 30,
      width: '100%',
      height: '10%',
+     marginBottom: 2,
+     fontFamily: 'Audiowide-Regular'
   },
   map: {
     width: '100%',

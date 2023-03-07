@@ -1,12 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Dimensions, FlatList } from 'react-native';
 import axios from 'axios';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+
 
 const API = 'http://nationsoundsmspr.000webhostapp.com//wp-json/wp/v2/posts/?per_page=100';
 
+
+
 function Alerte () {
    const [HomeAlerte, setHomeAlerte] = useState([]);
+   const navigation = useNavigation();
 
+   function handlePress() {
+      navigation.navigate('Alertes')
+   }
  
 useEffect(() => {
   axios.get(API)
@@ -22,7 +31,9 @@ const alerte = HomeAlerte.map((HomeAlerte) => {
         console.log(HomeAlerte.title)
         return (
          <View style={styles.notifView}>
+         <TouchableOpacity onPress={handlePress}>
          <Text key={HomeAlerte.id}>{HomeAlerte.title.rendered}</Text>
+         </TouchableOpacity>
          </View>
         )
       }  

@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#FBFB79',
     fontSize: 35,
-    fontWeight: 'bold',
     marginVertical: 8,
     fontFamily: 'Audiowide-Regular',
   },
@@ -82,8 +81,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontStyle: 'italic',
     color: 'white'
-  },
-  page: {
-    backgroundColor: '#121212',
   },
 });

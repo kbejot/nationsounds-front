@@ -14,7 +14,7 @@ export default class Informations extends React.Component {
               style={styles.notifScrollView}
               horizontal={true}
               pagingEnabled={true}
-              showsHorizontalScrollIndicator={false}
+              showsHorizontalScrollIndicator={true}
            >
               <View style={styles.notifView}>
                  <Text>Notif 1</Text>
@@ -39,6 +39,9 @@ export default class Informations extends React.Component {
         justifyContent: 'center',
         width: '100%',
         height: '10%',
+        borderWidth: 2,
+      borderColor: 'rgb(29, 28, 33)',
+        
      },
      notifScrollView: {
           flex: 1,

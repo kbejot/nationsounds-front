@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Linking } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import Maps from './components/Maps';
 import HomeScreen from './components/HomeScreen';
@@ -10,6 +10,7 @@ import Programmation3 from './components/Programmation3';
 import Subscribe from './components/subscribe';
 import Partenaires from './components/Partenaires';
 import AlerteDetail from './components/AlerteDetail';
+import { color } from 'react-native-reanimated';
 
 
 Subscribe();
@@ -38,14 +39,27 @@ function CustomDrawerContent(props) {
 
 
 const Drawer = createDrawerNavigator();
+const MyTheme = {
+  dark: true,
+  colors: {
+    primary: 'rgb(251, 251, 121)',
+    background: 'rgb(29, 28, 33)',
+    card: 'rgb(29, 28, 33)',
+    text: 'rgb(251, 251, 121)',
+    border: 'rgb(199, 199, 204)',
+    notification: 'rgb(255, 69, 58)',
+  },
+};
 
 export default function App() {
 
   return (
-    <NavigationContainer>    
+    <NavigationContainer theme={MyTheme}>    
        <Drawer.Navigator
         useLegacyImplementation
         drawerContent={(props) => <CustomDrawerContent {...props} />}
+  
+         
         >
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Alertes" component={AlerteDetail} />
