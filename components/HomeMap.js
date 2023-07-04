@@ -133,7 +133,7 @@ const Carte = () => {
     <>
    
       <MapView
-        style={{ flex: 1 }}
+        style={{ flex: 1, width:"100%", height:"100%" }}
         mapType="terrain"
         showsUserLocation={true}
         initialRegion={{

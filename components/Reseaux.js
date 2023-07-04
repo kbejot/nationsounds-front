@@ -4,17 +4,16 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView, Linking, useWindowDim
 import RenderHTML from 'react-native-render-html';
 
 
-const api = "https://nationsoundsmspr.000webhostapp.com/wp-json/wp/v2/posts/50"
-
-const Partenaires = () => {
-    const [part, setpart] = useState({});
+const api = "https://nationsoundsmspr.000webhostapp.com/wp-json/wp/v2/posts/52"
+const RS = () => {
+    const [res, setres] = useState({});
     const { width } = useWindowDimensions();
   
     useEffect(() => {
       axios.get(api)
-        .then(part => {
-          setpart(part.data);
-          // console.log(part.content);
+        .then(res => {
+          setres(res.data);
+          // console.log(res.content); 
         })
     }, []);
   
@@ -23,22 +22,23 @@ const Partenaires = () => {
       <SafeAreaView>
           <ScrollView>
                <View>
-      {part && part.title && (
+      {res && res.title && (
         <Text style={style.title}>
-          {part.title.rendered}
+          {res.title.rendered}
         </Text>
       )}
-  {part && part.content && (
+  {res && res.content && (
     
         <RenderHTML
-       source={{html:part.content.rendered}}
+       source={{html:res.content.rendered}}
        style={{ width }}
+        scalesPageToFit={false}
         tagsStyles={{
             img: {
-                display:'flex', flexDirection:'row', alignItems:'center', marginLeft:250, marginBottom:-35,
+                display:'flex', flexDirection:'row', alignItems:'center', marginBottom:-35,
             },
             a: {   color:'grey',
-                    marginLeft: 20,
+                    marginLeft: 75,
                     marginBottom:20,
                     fontSize: 25,
                     fontStyle: 'italic',
@@ -58,7 +58,7 @@ const Partenaires = () => {
   };
   
 
-export default Partenaires;
+export default RS;
 
 const style = StyleSheet.create ({
   title: {

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, Image, View } from 'react-native';
+import {Text, Image, View, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import MapView, { Marker, Callout } from 'react-native-maps';
 
@@ -117,6 +117,7 @@ const types = [
   return (
     <>
  <Picker
+ style={style.picker}
   selectedValue={selectedTypes}
   onValueChange={(value) =>
     setSelectedTypes(value === "Tous les types" ? allTypes : value)
@@ -168,3 +169,9 @@ const types = [
           };
           
           export default Carte;
+
+const style = StyleSheet.create ({
+  picker: {
+    color: 'rgb(251, 251, 121)',
+  }
+})

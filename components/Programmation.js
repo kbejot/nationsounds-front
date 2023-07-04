@@ -1,70 +1,61 @@
-import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, Text, View, StyleSheet} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, ScrollView, StyleSheet } from 'react-native';
 import axios from 'axios';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 
+function HomeProg () {
+  const [posts, setPosts] = useState([]);
+  
+  const navigation = useNavigation();
+  function handlePress() {
+    navigation.navigate('Programmation')
+ }
 
 
-
-
-const API = 'http://nationsoundsmspr.000webhostapp.com//wp-json/wp/v2/posts/';
-
-function Test () {
-
-  const [test, setTest] = useState([]);
-
- 
   useEffect(() => {
-    axios.get(API)
+    axios.get('http://nationsoundsmspr.000webhostapp.com//wp-json/wp/v2/posts?categories=7')
       .then((res) => {
-        setTest(res.data);
+        setPosts(res.data);
       });
   }, []);
 
-  const progStage1 = test.map((test) => {
-      const categories = test.categories
-      for (let i=0; i<categories.length; i++){
-        if (categories[i] == 8) {
-          console.log(test.title)
-          return (<Text style={styles.groupes} key={test.id}>{test.title.rendered}</Text>)
-        }  
-      }
-  })
-
-  const progStage2 = test.map((test) => {
-    const categories = test.categories
-    for (let i=0; i<categories.length; i++){
-      if (categories[i] == 9) {
-        console.log(test.title)
-        return (<Text style={styles.groupes} key={test.id}>{test.title.rendered}</Text>)
-      }  
+  const getRandomPosts = (count) => {
+    if (count > posts.length) {
+      count = posts.length;
     }
-})
-const progStage3 = test.map((test) => {
-  const categories = test.categories
-  for (let i=0; i<categories.length; i++){
-    if (categories[i] == 10) {
-      console.log(test.title)
-      return (<Text style={styles.groupes} key={test.id}>{test.title.rendered}</Text>)
-    }  
-  }
-})
+    const shuffledPosts = posts.sort(() => Math.random() - 0.5);
+    return shuffledPosts.slice(0, count);
+  };
+
+  const randomPosts = getRandomPosts(5);
+
+  const progStage1 = randomPosts.map((post) => {
+    return (
+   
+    <Text style={styles.groupes} key={post.id}>{post.title.rendered}</Text>
+    
+    );
+  });
+
 
 
   return(
+    
     <View style={styles.page}>
-        <Text style={styles.titre}>STAGE 1</Text>
-        {progStage1}
-        <Text style={styles.titre}>STAGE 2</Text>
-        {progStage2}
-        <Text style={styles.titre}>STAGE 3</Text>
-        {progStage3}
+        <Text style={styles.titre}>A VENIR</Text>
+        <TouchableOpacity onPress={handlePress}>
+        <ScrollView>
+             {progStage1}
+        </ScrollView>
+        </TouchableOpacity>
     </View>
   )
 
 }
 
-export default Test;
+export default HomeProg;
 
 const styles = StyleSheet.create({
   
@@ -80,6 +71,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     fontStyle: 'italic',
-    color: 'white'
+    color: 'white',
+    marginBottom:10,
   },
 });

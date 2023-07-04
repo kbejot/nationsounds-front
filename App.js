@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import * as React from 'react';
 import { Linking } from 'react-native';
 import { DarkTheme, NavigationContainer } from '@react-navigation/native';
@@ -10,6 +11,7 @@ import Programmation3 from './components/Programmation3';
 import Subscribe from './components/subscribe';
 import Partenaires from './components/Partenaires';
 import AlerteDetail from './components/AlerteDetail';
+import Reseaux from './components/Reseaux'
 import { color } from 'react-native-reanimated';
 
 
@@ -58,144 +60,26 @@ export default function App() {
        <Drawer.Navigator
         useLegacyImplementation
         drawerContent={(props) => <CustomDrawerContent {...props} />}
-  
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: 'rgb(29, 28, 33)',
+          },
+          headerTintColor: 'rgb(251, 251, 121)',
+          headerTitleStyle: {
+            fontFamily: 'Audiowide-Regular'
+          },
+        }}
          
         >
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Alertes" component={AlerteDetail} />
         <Drawer.Screen name="Infos" component={Informations} />
-        <Drawer.Screen name="Pogrammation" component={Programmation} />
         <Drawer.Screen name="Maps" component={Maps} />
-        <Drawer.Screen name="Pogrammation3" component={Programmation3} />
+        <Drawer.Screen name="Programmation" component={Programmation3} />
         <Drawer.Screen name="Partenaires" component={Partenaires} />
+        <Drawer.Screen name="Réseaux Sociaux" component={Reseaux} />
       </Drawer.Navigator>
     </NavigationContainer>
       
   );
 }
-/*
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'Main Stage',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Fury Stage',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Electro Stage',
-  },
-];
-
-const Item = ({title}) => (
-  <View>
-    <Text>{title}</Text>
-  </View>
-);
-
-function HomeScreen({ navigation }) {
-  const jumpToAction = DrawerActions.jumpTo('Profile', { user: 'Satya' });
-
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.notif}>Zone Notifications</Text>
-      <Test />
-      <Text>PROGRAMMATION</Text>
-      <FlatList
-        data={DATA}
-        renderItem={({item}) => <Item title={item.title} />}
-        keyExtractor={item => item.id}
-      />
-      <Text style={styles.billetterie}>BILLETTERIE</Text>
-      <Maps />
-    </View>
-  );
-}
-
-function ProfileScreen({ route }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Profile!</Text>
-      <Text>{route?.params?.user ? route.params.user : 'Noone'}'s profile</Text>
-    </View>
-  );
-}
-
-
-function CustomDrawerContent(props) {
-  return (
-    <DrawerContentScrollView {...props}>
-      <DrawerItemList {...props} />
-      <DrawerItem
-        label="Close drawer"
-        onPress={() => props.navigation.dispatch(DrawerActions.closeDrawer())}
-      />
-      <DrawerItem
-        label="Toggle drawer"
-        onPress={() => props.navigation.dispatch(DrawerActions.toggleDrawer())}
-      />
-      <DrawerItem 
-        label="Programmation"
-      />
-      <DrawerItem 
-        label="Billetterie"
-      />
-      <DrawerItem 
-        label="Map"
-      />
-      <DrawerItem 
-        label="FAQ"
-      />
-    </DrawerContentScrollView>
-  );
-}
-
-const Drawer = createDrawerNavigator();
-
-export default function App() {
-
-  return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        useLegacyImplementation
-        drawerContent={(props) => <CustomDrawerContent {...props} />}
-      >
-        <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Profile" component={ProfileScreen} />
-      
-        
-      </Drawer.Navigator>
-    </NavigationContainer>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'dimgrey',
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  map : {
-    width: '100%'
-  },
-  billetterie: {
-    width: '100%',
-    height: '10%',
-    backgroundColor: 'darkgrey',
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: 25,
-  },
-  notif: {
-    backgroundColor: 'red',
-    height: '5%',
-    width: '100%',
-    textAlign: 'center',
-    textAlignVertical: 'center',
-  }
-})
-*/

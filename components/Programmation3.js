@@ -1,25 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ScrollView,} from 'react-native';
+import { Text, View, StyleSheet, ScrollView, Linking, TouchableOpacity} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 
 
 function Programmation2() {
   const [prog, setProg] = useState([]);
-  const [selectedCategory1, setSelectedCategory1] = useState(null);
-  const [selectedCategory2, setSelectedCategory2] = useState(null);
-  const [selectedCategory3, setSelectedCategory3] = useState(null);
+  const [selectedStage, setselectedStage] = useState("7");
+  const [selectedDate, setselectedDate] = useState("7");
+  const [selectedHour, setselectedHour] = useState("7");
+  const [categories, setCategories] = useState([]);
+  const [filterShow, setFilterShow] = useState(false);
 
-  const [pickerUpdated, setPickerUpdated] = useState(false);
+  
+useEffect(() => {
+  axios
+    .get('http://nationsoundsmspr.000webhostapp.com//wp-json/wp/v2/categories')
+    .then((res) => setCategories(res.data))
+}, []);
+  
+
+  const [pickerUpdated, setPickerUpdated] = useState(true);
 
   useEffect(() => {
     if (pickerUpdated) {
       let api = 'http://nationsoundsmspr.000webhostapp.com//wp-json/wp/v2/posts?_embed&per_page=100';
   
       const categories = [];
-      if (selectedCategory1) categories.push(selectedCategory1);
-      if (selectedCategory2) categories.push(selectedCategory2);
-      if (selectedCategory3) categories.push(selectedCategory3);
+      if (selectedStage) categories.push(selectedStage);
+      if (selectedDate) categories.push(selectedDate);
+      if (selectedHour) categories.push(selectedHour);
   
       if (categories.length > 0) {
         api += `&categories=${categories.join(",")}`;
@@ -33,20 +43,20 @@ function Programmation2() {
         setProg(filteredProg);
       });
     }
-  }, [selectedCategory1, selectedCategory2, selectedCategory3, pickerUpdated]);
+  }, [selectedStage, selectedDate, selectedHour, pickerUpdated]);
   
-  const handleCategoryChange1 = (itemValue) => {
-    setSelectedCategory1(itemValue);
+  const selectStage = (itemValue) => {
+    setselectedStage(itemValue);
     setPickerUpdated(true);
   };
   
-  const handleCategoryChange2 = (itemValue) => {
-    setSelectedCategory2(itemValue);
+  const selectDate = (itemValue) => {
+    setselectedDate(itemValue);
     setPickerUpdated(true);
   };
   
-  const handleCategoryChange3 = (itemValue) => {
-    setSelectedCategory3(itemValue);
+  const selectHour = (itemValue) => {
+    setselectedHour(itemValue);
     setPickerUpdated(true);
   };
  
@@ -54,46 +64,63 @@ function Programmation2() {
     if (prog.length === 0) {
       return <Text>Aucun évènement prévu au moment selectionné</Text>;
     }
-
+  
     const uniquePosts = prog.filter((post, index) => {
       return prog.findIndex((p) => p.id === post.id) === index;
     });
-
+  
     return (
       <ScrollView>
         {uniquePosts.map((post) => (
-          <View key={post.id}>
-            <Text style={style.post}>{post.title.rendered}</Text>
-          </View>
+          <TouchableOpacity
+            key={post.id}
+            onPress={() => Linking.openURL(post.link)}
+            style={style.postContainer}
+          >
+            <View style={style.timeContainer}>
+              {post.categories.map((categoryId) => {
+                const category = categories.find((cat) => cat.id === categoryId);
+                if (category) {
+                  return <Text key={category.id} style={style.hours}>{category.name}</Text>;
+                }
+              })}
+            </View>
+            <View style={style.titleContainer}>
+              <Text style={style.post}>{post.title.rendered}</Text>
+            </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     );
-  };
-
+            }    
+    
   return (
  
-    
-        <View>
+    <ScrollView>
+          <View>
           <Picker
-            selectedValue={selectedCategory1}
-            onValueChange={handleCategoryChange1}>
-            <Picker.Item label="Scènes" value="0" />
+            selectedValue={selectedStage}
+            onValueChange={selectStage}
+            style={style.picker}>
+            <Picker.Item label="Scènes" value="7" />
             <Picker.Item label="Stage 1" value="8" />
             <Picker.Item label="Stage 2" value="9" />
             <Picker.Item label="Stage 3" value="10" />
           </Picker>
           <Picker
-            selectedValue={selectedCategory2}
-            onValueChange={handleCategoryChange2}>
-            <Picker.Item label="Date" value="0"/>
+            selectedValue={selectedDate}
+            onValueChange={selectDate}
+            style={style.picker}>
+            <Picker.Item label="Date" value="7"/>
             <Picker.Item label="Vendredi" value="17" />
             <Picker.Item label="Samedi" value="18" />
             <Picker.Item label="Dimanche" value="19" />
           </Picker>
    <Picker
-            selectedValue={selectedCategory3}
-            onValueChange={handleCategoryChange3}>
-     <Picker.Item label="Horaires" value="0"/>
+            selectedValue={selectedHour}
+            onValueChange={selectHour}
+            style={style.picker}>
+     <Picker.Item label="Horaires" value="7"/>
      <Picker.Item label="14h" value="20" />
      <Picker.Item label="15h" value="21" />
      <Picker.Item label="16h" value="22" />
@@ -108,19 +135,42 @@ function Programmation2() {
    {renderPosts()}
         </View>
 
+    </ScrollView>
+    
   );
 }
 
 
 export default Programmation2;
 
-const style = StyleSheet.create ({
-  post: {
-    color:'grey',
-   fontWeight: 'bold',
-    fontSize: 25,
-    marginHorizontal: 75,
+
+const style = StyleSheet.create({
+  postContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 15,
     marginTop: 20,
+  },
+  timeContainer: {
+    flex: 1,
+    marginRight: 10,
+  },
+  titleContainer: {
+    flex: 4,
+  },
+  post: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 25,
+    paddingLeft: 10,
+  },
+  hours: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 30,
+  },
+   picker: {
+    color: 'rgb(251, 251, 121)',
   }
-})
+});
