@@ -1,72 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, Linking, useWindowDimensions} from 'react-native';
-import RenderHTML from 'react-native-render-html';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 
+const api = "http://192.168.1.14:8000/api/reseauxes";
 
-const api = "https://nationsoundsmspr.000webhostapp.com/wp-json/wp/v2/posts/52"
 const RS = () => {
-    const [res, setres] = useState({});
-    const { width } = useWindowDimensions();
-  
+    const [reseaux, setReseaux] = useState([]);
+
     useEffect(() => {
-      axios.get(api)
-        .then(res => {
-          setres(res.data);
-          // console.log(res.content); 
-        })
+        axios.get(api, { headers: { accept: 'application/ld+json' } })
+            .then(response => {
+                if (response.data && response.data["hydra:member"]) {
+                    setReseaux(response.data["hydra:member"]);
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors de la récupération des données:", error);
+            });
     }, []);
-  
-  
+
     return (
-      <SafeAreaView>
-          <ScrollView>
-               <View>
-      {res && res.title && (
-        <Text style={style.title}>
-          {res.title.rendered}
-        </Text>
-      )}
-  {res && res.content && (
-    
-        <RenderHTML
-       source={{html:res.content.rendered}}
-       style={{ width }}
-        scalesPageToFit={false}
-        tagsStyles={{
-            img: {
-                display:'flex', flexDirection:'row', alignItems:'center', marginBottom:-35,
-            },
-            a: {   color:'grey',
-                    marginLeft: 75,
-                    marginBottom:20,
-                    fontSize: 25,
-                    fontStyle: 'italic',
-                    textDecorationLine:'none',
-                },
-        }}
-        onLinkPress={( href) => { Linking.openURL(href) }}
-      /> 
-    
-     
-    )}
-    </View> 
-          </ScrollView>
-      </SafeAreaView>
-    
+        <SafeAreaView>
+            <ScrollView>
+                <View style={style.container}>
+                    {reseaux.map((res, index) => (
+                        <Text key={index} style={style.title}>
+                            {res.nom}
+                        </Text>
+                    ))}
+                </View>
+            </ScrollView>
+        </SafeAreaView>
     );
-  };
-  
+};
 
 export default RS;
 
-const style = StyleSheet.create ({
-  title: {
-    margin: 20,
-    fontSize: 30,
-    padding:5,
-    fontStyle: 'bold',
-    lineHeight: 30,
-    color: 'white',
-  },
-})
+const style = StyleSheet.create({
+    container: {
+        padding: 10,
+    },
+    title: {
+        marginVertical: 20,
+        marginHorizontal: 100,
+        fontSize: 30,
+        fontWeight: 'bold',
+        color: 'white',
+    },
+});

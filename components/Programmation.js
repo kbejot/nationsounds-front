@@ -1,64 +1,53 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, ScrollView, StyleSheet } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
-
-function HomeProg () {
-  const [posts, setPosts] = useState([]);
-  
+function HomeProg() {
+  const [concerts, setConcerts] = useState([]);
   const navigation = useNavigation();
-  function handlePress() {
-    navigation.navigate('Programmation')
- }
-
 
   useEffect(() => {
-    axios.get('http://nationsoundsmspr.000webhostapp.com//wp-json/wp/v2/posts?categories=7')
+    axios.get('http://192.168.1.14:8000/api/concerts?page=1')
       .then((res) => {
-        setPosts(res.data);
+        setConcerts(res.data["hydra:member"]);
       });
   }, []);
 
-  const getRandomPosts = (count) => {
-    if (count > posts.length) {
-      count = posts.length;
+  const getRandomConcerts = (count) => {
+    if (count > concerts.length) {
+      count = concerts.length;
     }
-    const shuffledPosts = posts.sort(() => Math.random() - 0.5);
-    return shuffledPosts.slice(0, count);
+    const shuffledConcerts = concerts.sort(() => Math.random() - 0.5);
+    return shuffledConcerts.slice(0, count);
   };
 
-  const randomPosts = getRandomPosts(5);
+  const randomConcerts = getRandomConcerts(5);
 
-  const progStage1 = randomPosts.map((post) => {
-    return (
-   
-    <Text style={styles.groupes} key={post.id}>{post.title.rendered}</Text>
-    
-    );
-  });
-
-
-
-  return(
-    
+  return (
     <View style={styles.page}>
-        <Text style={styles.titre}>A VENIR</Text>
-        <TouchableOpacity onPress={handlePress}>
+      <Text style={styles.titre}>A VENIR</Text>
+      <TouchableOpacity onPress={handlePress}>
         <ScrollView>
-             {progStage1}
+          {randomConcerts.map((concert) => (
+            <Text style={styles.groupes} key={concert.id}>{concert.artiste}</Text>
+          ))}
         </ScrollView>
-        </TouchableOpacity>
+      </TouchableOpacity>
     </View>
-  )
+  );
 
+  function handlePress() {
+    navigation.navigate('Programmation');
+  }
 }
 
-export default HomeProg;
-
 const styles = StyleSheet.create({
-  
+  page: {
+    flex: 1,
+    backgroundColor: '#1B1B1B',
+    padding: 10,
+  },
   titre: {
     textAlign: 'center',
     color: '#FBFB79',
@@ -72,6 +61,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontStyle: 'italic',
     color: 'white',
-    marginBottom:10,
+    marginBottom: 10,
   },
 });
+
+export default HomeProg;

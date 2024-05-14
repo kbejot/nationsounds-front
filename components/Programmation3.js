@@ -1,148 +1,101 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ScrollView, Linking, TouchableOpacity} from 'react-native';
+import { Text, View, StyleSheet, ScrollView, Linking, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 
-
 function Programmation2() {
-  const [prog, setProg] = useState([]);
-  const [selectedStage, setselectedStage] = useState("7");
-  const [selectedDate, setselectedDate] = useState("7");
-  const [selectedHour, setselectedHour] = useState("7");
-  const [categories, setCategories] = useState([]);
-  const [filterShow, setFilterShow] = useState(false);
+  const [concerts, setConcerts] = useState([]);
+  const [selectedScene, setSelectedScene] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedHour, setSelectedHour] = useState(null);
 
-  
-useEffect(() => {
-  axios
-    .get('http://nationsoundsmspr.000webhostapp.com//wp-json/wp/v2/categories')
-    .then((res) => setCategories(res.data))
-}, []);
-  
-
-  const [pickerUpdated, setPickerUpdated] = useState(true);
-
+  // Fetch all concerts on initial mount
   useEffect(() => {
-    if (pickerUpdated) {
-      let api = 'http://nationsoundsmspr.000webhostapp.com//wp-json/wp/v2/posts?_embed&per_page=100';
-  
-      const categories = [];
-      if (selectedStage) categories.push(selectedStage);
-      if (selectedDate) categories.push(selectedDate);
-      if (selectedHour) categories.push(selectedHour);
-  
-      if (categories.length > 0) {
-        api += `&categories=${categories.join(",")}`;
-      }
-  
-      axios.get(api).then((res) => {
-        const filteredProg = res.data.filter((prog) => {
-          const categoriesIds = prog.categories.map((cat) => cat.toString());
-          return categories.every((cat) => categoriesIds.includes(cat));
-        });
-        setProg(filteredProg);
+    axios.get('http://192.168.1.14:8000/api/concerts?page=1')
+      .then((res) => {
+        setConcerts(res.data["hydra:member"]);
       });
-    }
-  }, [selectedStage, selectedDate, selectedHour, pickerUpdated]);
-  
-  const selectStage = (itemValue) => {
-    setselectedStage(itemValue);
-    setPickerUpdated(true);
+  }, []);
+
+  // Function to filter concerts
+  const getFilteredConcerts = () => {
+    return concerts.filter(concert => {
+      if (selectedScene && concert.scene !== selectedScene) {
+        return false;
+      }
+      if (selectedDate && concert.Date !== selectedDate + "T00:00:00+00:00") {
+        return false;
+      }
+      if (selectedHour && new Date(concert.Horaire).getUTCHours() !== parseInt(selectedHour, 10)) {
+        return false;
+      }
+      return true;
+    });
   };
-  
-  const selectDate = (itemValue) => {
-    setselectedDate(itemValue);
-    setPickerUpdated(true);
-  };
-  
-  const selectHour = (itemValue) => {
-    setselectedHour(itemValue);
-    setPickerUpdated(true);
-  };
- 
   const renderPosts = () => {
-    if (prog.length === 0) {
+    if (concerts.length === 0) {
       return <Text>Aucun évènement prévu au moment selectionné</Text>;
     }
-  
-    const uniquePosts = prog.filter((post, index) => {
-      return prog.findIndex((p) => p.id === post.id) === index;
-    });
-  
-    return (
-      <ScrollView>
-        {uniquePosts.map((post) => (
+  }
+
+  const filteredConcerts = getFilteredConcerts();
+
+  return (
+    <ScrollView>
+      <View>
+        <Picker
+          selectedValue={selectedScene}
+          onValueChange={(value) => setSelectedScene(value)}
+          style={style.picker}
+        >
+          <Picker.Item label="Scènes" value={null} />
+          <Picker.Item label="Scene 1" value="1" />
+          <Picker.Item label="Scene 2" value="2" />
+          <Picker.Item label="Scene 3" value="3" />
+        </Picker>
+        <Picker
+          selectedValue={selectedDate}
+          onValueChange={(value) => setSelectedDate(value)}
+          style={style.picker}
+        >
+          <Picker.Item label="Date" value={null} />
+          <Picker.Item label="2023-09-05" value="2023-09-05" />
+          <Picker.Item label="2023-09-06" value="2023-09-06" />
+          <Picker.Item label="2023-09-07" value="2023-09-07" />
+        </Picker>
+        <Picker
+          selectedValue={selectedHour}
+          onValueChange={(value) => setSelectedHour(value)}
+          style={style.picker}
+        >
+          <Picker.Item label="Horaires" value={null} />
+          <Picker.Item label="16h" value="15" />
+          <Picker.Item label="17h" value="16" />
+          <Picker.Item label="18h" value="17" />
+        </Picker>
+        {filteredConcerts.map((concert) => (
           <TouchableOpacity
-            key={post.id}
-            onPress={() => Linking.openURL(post.link)}
+            key={concert.id}
+            onPress={() => Linking.openURL(concert["@id"])}
             style={style.postContainer}
           >
             <View style={style.timeContainer}>
-              {post.categories.map((categoryId) => {
-                const category = categories.find((cat) => cat.id === categoryId);
-                if (category) {
-                  return <Text key={category.id} style={style.hours}>{category.name}</Text>;
-                }
-              })}
+              <Text style={style.hours}>
+                {new Date(concert.Horaire).getHours()}h
+              </Text>
             </View>
             <View style={style.titleContainer}>
-              <Text style={style.post}>{post.title.rendered}</Text>
+              <Text style={style.post}>{concert.Artiste}</Text>
             </View>
+            {renderPosts()}
           </TouchableOpacity>
         ))}
-      </ScrollView>
-    );
-            }    
-    
-  return (
- 
-    <ScrollView>
-          <View>
-          <Picker
-            selectedValue={selectedStage}
-            onValueChange={selectStage}
-            style={style.picker}>
-            <Picker.Item label="Scènes" value="7" />
-            <Picker.Item label="Stage 1" value="8" />
-            <Picker.Item label="Stage 2" value="9" />
-            <Picker.Item label="Stage 3" value="10" />
-          </Picker>
-          <Picker
-            selectedValue={selectedDate}
-            onValueChange={selectDate}
-            style={style.picker}>
-            <Picker.Item label="Date" value="7"/>
-            <Picker.Item label="Vendredi" value="17" />
-            <Picker.Item label="Samedi" value="18" />
-            <Picker.Item label="Dimanche" value="19" />
-          </Picker>
-   <Picker
-            selectedValue={selectedHour}
-            onValueChange={selectHour}
-            style={style.picker}>
-     <Picker.Item label="Horaires" value="7"/>
-     <Picker.Item label="14h" value="20" />
-     <Picker.Item label="15h" value="21" />
-     <Picker.Item label="16h" value="22" />
-     <Picker.Item label="17h" value="23" />
-     <Picker.Item label="18h" value="24" />
-     <Picker.Item label="19h" value="25" />
-     <Picker.Item label="20h" value="26" />
-     <Picker.Item label="21h" value="27" />
-     <Picker.Item label="22h" value="28" />
-     <Picker.Item label="23h" value="29" />
-   </Picker>
-   {renderPosts()}
-        </View>
-
+      </View>
     </ScrollView>
-    
   );
 }
 
-
 export default Programmation2;
-
 
 const style = StyleSheet.create({
   postContainer: {
@@ -170,7 +123,7 @@ const style = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 30,
   },
-   picker: {
+  picker: {
     color: 'rgb(251, 251, 121)',
-  }
+  },
 });

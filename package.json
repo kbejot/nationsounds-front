@@ -10,6 +10,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-community/cli": "^11.3.8",
+    "@react-native-community/cli-doctor": "^11.3.8",
     "@react-native-firebase/app": "^17.3.0",
     "@react-native-firebase/messaging": "^17.3.0",
     "@react-native-picker/picker": "^2.4.8",

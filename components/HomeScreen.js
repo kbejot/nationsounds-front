@@ -10,7 +10,7 @@ import HomeMap from './HomeMap';
 
 
 
-const urlBilletterie = 'https://nationsoundsmspr.000webhostapp.com/billetterie/'
+const urlBilletterie = 'http://192.168.1.14:8000/billeterie'
 
 
 function HomeScreen() {

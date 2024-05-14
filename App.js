@@ -17,8 +17,8 @@ import { color } from 'react-native-reanimated';
 
 Subscribe();
 
-const urlBilletterie = 'https://nationsoundsmspr.000webhostapp.com/billetterie/';
-const urlFAQ = 'https://nationsoundsmspr.000webhostapp.com/faq/';
+const urlBilletterie = 'http://192.168.1.14:8000/billeterie';
+const urlFAQ = 'http://192.168.1.14:8000/faq';
  
 
 
