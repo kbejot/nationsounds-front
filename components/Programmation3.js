@@ -1,42 +1,58 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ScrollView, Linking, TouchableOpacity } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import React, {useEffect, useState} from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  Linking,
+  TouchableOpacity,
+} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
 
-function Programmation2() {
+const api =
+  'https://e7c7-2001-861-d36-f830-70f8-35e8-9d24-6eb9.ngrok-free.app/api/concerts?page=1';
+
+const Programmation2 = () => {
   const [concerts, setConcerts] = useState([]);
   const [selectedScene, setSelectedScene] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedHour, setSelectedHour] = useState(null);
 
-  // Fetch all concerts on initial mount
   useEffect(() => {
-    axios.get('http://192.168.1.14:8000/api/concerts?page=1')
-      .then((res) => {
-        setConcerts(res.data["hydra:member"]);
+    axios
+      .get(api)
+      .then(res => {
+        setConcerts(res.data['hydra:member']);
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération des données:', error);
       });
   }, []);
 
-  // Function to filter concerts
   const getFilteredConcerts = () => {
     return concerts.filter(concert => {
       if (selectedScene && concert.scene !== selectedScene) {
         return false;
       }
-      if (selectedDate && concert.Date !== selectedDate + "T00:00:00+00:00") {
+      if (selectedDate && !concert.date.startsWith(selectedDate)) {
         return false;
       }
-      if (selectedHour && new Date(concert.Horaire).getUTCHours() !== parseInt(selectedHour, 10)) {
+      if (
+        selectedHour &&
+        new Date(concert.horaire).getUTCHours() !== parseInt(selectedHour, 10)
+      ) {
         return false;
       }
       return true;
     });
   };
+
   const renderPosts = () => {
-    if (concerts.length === 0) {
-      return <Text>Aucun évènement prévu au moment selectionné</Text>;
+    if (filteredConcerts.length === 0) {
+      return <Text>Aucun évènement prévu au moment sélectionné</Text>;
     }
-  }
+  };
 
   const filteredConcerts = getFilteredConcerts();
 
@@ -45,55 +61,51 @@ function Programmation2() {
       <View>
         <Picker
           selectedValue={selectedScene}
-          onValueChange={(value) => setSelectedScene(value)}
-          style={style.picker}
-        >
+          onValueChange={value => setSelectedScene(value)}
+          style={style.picker}>
           <Picker.Item label="Scènes" value={null} />
-          <Picker.Item label="Scene 1" value="1" />
-          <Picker.Item label="Scene 2" value="2" />
-          <Picker.Item label="Scene 3" value="3" />
+          <Picker.Item label="Scene 1" value="/api/scenes/1" />
+          <Picker.Item label="Scene 2" value="/api/scenes/2" />
+          <Picker.Item label="Scene 3" value="/api/scenes/3" />
         </Picker>
         <Picker
           selectedValue={selectedDate}
-          onValueChange={(value) => setSelectedDate(value)}
-          style={style.picker}
-        >
+          onValueChange={value => setSelectedDate(value)}
+          style={style.picker}>
           <Picker.Item label="Date" value={null} />
-          <Picker.Item label="2023-09-05" value="2023-09-05" />
-          <Picker.Item label="2023-09-06" value="2023-09-06" />
-          <Picker.Item label="2023-09-07" value="2023-09-07" />
+          <Picker.Item label="21/05/2024" value="2024-05-21" />
+          <Picker.Item label="22/05/2024" value="2024-05-22" />
+          <Picker.Item label="23/05/2024" value="2024-05-23" />
         </Picker>
         <Picker
           selectedValue={selectedHour}
-          onValueChange={(value) => setSelectedHour(value)}
-          style={style.picker}
-        >
+          onValueChange={value => setSelectedHour(value)}
+          style={style.picker}>
           <Picker.Item label="Horaires" value={null} />
-          <Picker.Item label="16h" value="15" />
-          <Picker.Item label="17h" value="16" />
-          <Picker.Item label="18h" value="17" />
+          <Picker.Item label="15h" value="15" />
+          <Picker.Item label="16h" value="16" />
+          <Picker.Item label="17h" value="17" />
         </Picker>
-        {filteredConcerts.map((concert) => (
+        {renderPosts()}
+        {filteredConcerts.map(concert => (
           <TouchableOpacity
             key={concert.id}
-            onPress={() => Linking.openURL(concert["@id"])}
-            style={style.postContainer}
-          >
+            onPress={() => Linking.openURL(concert['@id'])}
+            style={style.postContainer}>
             <View style={style.timeContainer}>
               <Text style={style.hours}>
                 {new Date(concert.Horaire).getHours()}h
               </Text>
             </View>
             <View style={style.titleContainer}>
-              <Text style={style.post}>{concert.Artiste}</Text>
+              <Text style={style.post}>{concert.artiste.name}</Text>
             </View>
-            {renderPosts()}
           </TouchableOpacity>
         ))}
       </View>
     </ScrollView>
   );
-}
+};
 
 export default Programmation2;
 

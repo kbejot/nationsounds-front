@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 
-const api = "http://192.168.1.14:8000/api/reseauxes";
+const api = "https://e7c7-2001-861-d36-f830-70f8-35e8-9d24-6eb9.ngrok-free.app/api/reseauxes";
 
 const RS = () => {
     const [reseaux, setReseaux] = useState([]);

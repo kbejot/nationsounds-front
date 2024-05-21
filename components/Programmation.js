@@ -1,20 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  Text,
+  View,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 function HomeProg() {
   const [concerts, setConcerts] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-    axios.get('http://192.168.1.14:8000/api/concerts?page=1')
-      .then((res) => {
-        setConcerts(res.data["hydra:member"]);
+    axios
+      .get(
+        'https://e7c7-2001-861-d36-f830-70f8-35e8-9d24-6eb9.ngrok-free.app/api/concerts?page=1',
+      )
+      .then(res => {
+        setConcerts(res.data['hydra:member']);
       });
   }, []);
 
-  const getRandomConcerts = (count) => {
+  const getRandomConcerts = count => {
     if (count > concerts.length) {
       count = concerts.length;
     }
@@ -29,8 +38,10 @@ function HomeProg() {
       <Text style={styles.titre}>A VENIR</Text>
       <TouchableOpacity onPress={handlePress}>
         <ScrollView>
-          {randomConcerts.map((concert) => (
-            <Text style={styles.groupes} key={concert.id}>{concert.artiste}</Text>
+          {randomConcerts.map(concert => (
+            <Text style={styles.groupes} key={concert.id}>
+              {concert.artiste}
+            </Text>
           ))}
         </ScrollView>
       </TouchableOpacity>
