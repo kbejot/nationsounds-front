@@ -1,23 +1,28 @@
 import React, {useState, useEffect} from 'react';
-import {Text, Image, View, StyleSheet } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import MapView, { Marker, Callout } from 'react-native-maps';
+import {Text, Image, View, StyleSheet} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
+import MapView, {Marker, Callout} from 'react-native-maps';
 
 const Carte = () => {
-  const allTypes = ['scene', 'buvette', 'toilettes', 'nuit', 'dedicaces', 'tous'];
+  //préparation des types pour filtres
+  const allTypes = [
+    'scene',
+    'buvette',
+    'toilettes',
+    'nuit',
+    'dedicaces',
+    'tous',
+  ];
   const [selectedTypes, setSelectedTypes] = useState([]);
 
-  
-const types = [
-  { label: 'Scènes', value: 'scene' },
-  { label: 'Buvettes', value: 'buvette' },
-  { label: 'Toilettes', value: 'toilettes' },
-  { label: 'Espace nuit', value: 'nuit' },
-  { label: 'Dédicaces', value: 'dedicaces' },
-];
-
-
-    
+  const types = [
+    {label: 'Scènes', value: 'scene'},
+    {label: 'Buvettes', value: 'buvette'},
+    {label: 'Toilettes', value: 'toilettes'},
+    {label: 'Espace nuit', value: 'nuit'},
+    {label: 'Dédicaces', value: 'dedicaces'},
+  ];
+//ajout des marquurs à la map
   const marqueurs = [
     {
       latlng: {
@@ -74,104 +79,104 @@ const types = [
       type: 'buvette',
     },
     {
-        latlng: {
-          latitude: 48.8571261718558,
-          longitude: 2.207691371440888,
-        },
-        description: 'Toilettes 1',
-        image: require('../assets/img/toilettes.png'),
-        type: 'toilettes',
+      latlng: {
+        latitude: 48.8571261718558,
+        longitude: 2.207691371440888,
       },
-      {
-        latlng: {
-          latitude: 48.85866956968932,
-          longitude: 2.1987140178680424,
-        },
-        description: 'Toilettes 2',
-        image: require('../assets/img/toilettes.png'),
-        type: 'toilettes',
+      description: 'Toilettes 1',
+      image: require('../assets/img/toilettes.png'),
+      type: 'toilettes',
+    },
+    {
+      latlng: {
+        latitude: 48.85866956968932,
+        longitude: 2.1987140178680424,
       },
-      {
-        latlng: {
-          latitude: 48.86009540707101,
-          longitude: 2.196954488754273,
-        },
-        description: 'Espace nuit',
-        image: require('../assets/img/tente.png'),
-        type: 'nuit',
+      description: 'Toilettes 2',
+      image: require('../assets/img/toilettes.png'),
+      type: 'toilettes',
+    },
+    {
+      latlng: {
+        latitude: 48.86009540707101,
+        longitude: 2.196954488754273,
       },
-      {
-        latlng: {
-          latitude: 48.85381294751467,
-          longitude: 2.2026622295379643,
-        },
-        description: 'Dédicaces',
-        image: require('../assets/img/star.png'),
-        type: 'dedicaces',
+      description: 'Espace nuit',
+      image: require('../assets/img/tente.png'),
+      type: 'nuit',
+    },
+    {
+      latlng: {
+        latitude: 48.85381294751467,
+        longitude: 2.2026622295379643,
       },
+      description: 'Dédicaces',
+      image: require('../assets/img/star.png'),
+      type: 'dedicaces',
+    },
   ];
-  
 
-  const filteredMarqueurs = selectedTypes.length === 0 ? marqueurs : marqueurs.filter(marqueur => selectedTypes.includes(marqueur.type));
-
+  const filteredMarqueurs =
+    selectedTypes.length === 0
+      ? marqueurs
+      : marqueurs.filter(marqueur => selectedTypes.includes(marqueur.type));
+//rendu de la map avec les marquers filtrés ou non
   return (
     <>
- <Picker
- style={style.picker}
-  selectedValue={selectedTypes}
-  onValueChange={(value) =>
-    setSelectedTypes(value === "Tous les types" ? allTypes : value)
-  }
->
-  <Picker.Item label="Tous les types" value="Tous les types" />
-  {types.map((type) => (
-    <Picker.Item key={type.value} label={type.label} value={type.value} />
-  ))}
-</Picker>
+      <Picker
+        style={style.picker}
+        selectedValue={selectedTypes}
+        onValueChange={value =>
+          setSelectedTypes(value === 'Tous les types' ? allTypes : value)
+        }>
+        <Picker.Item label="Tous les types" value="Tous les types" />
+        {types.map(type => (
+          <Picker.Item key={type.value} label={type.label} value={type.value} />
+        ))}
+      </Picker>
 
-<MapView
-  style={{ flex: 1, marginTop: 30 }}
-  mapType="terrain"
-  showsUserLocation={true}
-  initialRegion={{
-    latitude: 48.85817545815007,
-    longitude: 2.2031772136688237,
-    latitudeDelta: 0.02,
-    longitudeDelta: 0.02,
-  }}
->
-  {selectedTypes.includes("Tous les types")
-    ? marqueurs.map(({ latlng, description, image }, index) => (
-        <Marker key={index} coordinate={latlng}>
-          <Image
-            style={{ marginHorizontal: 10, width: 30, height: 30 }}
-            source={image}
-          />
-          <Callout>
-            <Text style={{ color: "red" }}>{description}</Text>
-          </Callout>
-        </Marker>
-      ))
-    : filteredMarqueurs.map(({ latlng, description, image }, index) => (
-        <Marker key={index} coordinate={latlng}>
-          <Image
-            style={{ marginHorizontal: 10, width: 30, height: 30 }}
-            source={image}
-          />
-          <Callout>
-            <Text style={{ color: "red" }}>{description}</Text>
-          </Callout>
-        </Marker>
-      ))}
-</MapView>
+      <MapView
+        style={{flex: 1, marginTop: 30}}
+        mapType="terrain"
+        showsUserLocation={true}
+        initialRegion={{
+          latitude: 48.85817545815007,
+          longitude: 2.2031772136688237,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
+        }}>
+        {selectedTypes.includes('Tous les types')
+          ? marqueurs.map(({latlng, description, image}, index) => (
+              <Marker key={index} coordinate={latlng}>
+                <Image
+                  style={{marginHorizontal: 10, width: 30, height: 30}}
+                  source={image}
+                />
+                <Callout>
+                  <Text style={{color: 'red'}}>{description}</Text>
+                </Callout>
+              </Marker>
+            ))
+          : filteredMarqueurs.map(({latlng, description, image}, index) => (
+              <Marker key={index} coordinate={latlng}>
+                <Image
+                  style={{marginHorizontal: 10, width: 30, height: 30}}
+                  source={image}
+                />
+                <Callout>
+                  <Text style={{color: 'red'}}>{description}</Text>
+                </Callout>
+              </Marker>
+            ))}
+      </MapView>
+    </>
+  );
+};
 
-          </>)
-          };
-          
-          export default Carte;
+export default Carte;
 
-const style = StyleSheet.create ({
+const style = StyleSheet.create({
   picker: {
     color: 'rgb(251, 251, 121)',
-  }
-})
+  },
+});

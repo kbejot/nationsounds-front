@@ -19,6 +19,8 @@ const Programmation2 = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedHour, setSelectedHour] = useState(null);
 
+  //requete ajax pour récupérer les concerts
+
   useEffect(() => {
     axios
       .get(api)
@@ -30,6 +32,7 @@ const Programmation2 = () => {
       });
   }, []);
 
+  //gestion des concerts si filtrés
   const getFilteredConcerts = () => {
     return concerts.filter(concert => {
       if (selectedScene && concert.scene !== selectedScene) {
@@ -48,6 +51,7 @@ const Programmation2 = () => {
     });
   };
 
+  //affichage des concerts
   const renderPosts = () => {
     if (filteredConcerts.length === 0) {
       return <Text>Aucun évènement prévu au moment sélectionné</Text>;
@@ -56,6 +60,7 @@ const Programmation2 = () => {
 
   const filteredConcerts = getFilteredConcerts();
 
+  //rendu des concerts filtrés
   return (
     <ScrollView>
       <View>
@@ -109,6 +114,7 @@ const Programmation2 = () => {
 
 export default Programmation2;
 
+//styles
 const style = StyleSheet.create({
   postContainer: {
     flexDirection: 'row',

@@ -13,6 +13,7 @@ function HomeProg() {
   const [concerts, setConcerts] = useState([]);
   const navigation = useNavigation();
 
+  //requetes api pour récupérer les concerts
   useEffect(() => {
     axios
       .get(
@@ -23,6 +24,7 @@ function HomeProg() {
       });
   }, []);
 
+  //affichage aléatire de 5 concerts
   const getRandomConcerts = count => {
     if (count > concerts.length) {
       count = concerts.length;
@@ -33,6 +35,7 @@ function HomeProg() {
 
   const randomConcerts = getRandomConcerts(5);
 
+  //rendu des 5 concerts
   return (
     <View style={styles.page}>
       <Text style={styles.titre}>A VENIR</Text>
@@ -48,6 +51,7 @@ function HomeProg() {
     </View>
   );
 
+  //lien vers la page programmation
   function handlePress() {
     navigation.navigate('Programmation');
   }

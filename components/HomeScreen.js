@@ -17,6 +17,7 @@ import HomeMap from './HomeMap';
 const urlBilletterie =
   'https://e7c7-2001-861-d36-f830-70f8-35e8-9d24-6eb9.ngrok-free.app/billeterie';
 
+//rendu de la page d'accueil'
 function HomeScreen() {
   return (
     <ScrollView>

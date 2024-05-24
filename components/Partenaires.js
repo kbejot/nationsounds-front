@@ -8,6 +8,8 @@ const api =
 const Partenaires = () => {
   const [partenaires, setPartenaires] = useState([]);
 
+  //requete api pour récupérer les partenaires
+
   useEffect(() => {
     axios
       .get(api, {headers: {accept: 'application/ld+json'}})
@@ -21,6 +23,7 @@ const Partenaires = () => {
       });
   }, []);
 
+  //rendu des partenaires
   return (
     <SafeAreaView>
       <ScrollView>
