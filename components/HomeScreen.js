@@ -1,21 +1,12 @@
 import * as React from 'react';
 import {Linking} from 'react-native';
-import {
-  View,
-  Button,
-  Text,
-  Image,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-} from 'react-native';
-import Alerte from './Alerte';
+import {View, Text, StyleSheet, ScrollView, SafeAreaView} from 'react-native';
 import Programmation from './Programmation';
 import Informations from './Informations';
 import HomeMap from './HomeMap';
 
 const urlBilletterie =
-  'https://e7c7-2001-861-d36-f830-70f8-35e8-9d24-6eb9.ngrok-free.app/billeterie';
+  'https://ad4c-2001-861-d36-f830-fcaf-970d-5558-63d1.ngrok-free.app/billeterie';
 
 //rendu de la page d'accueil'
 function HomeScreen() {

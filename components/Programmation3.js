@@ -11,7 +11,7 @@ import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
 
 const api =
-  'https://e7c7-2001-861-d36-f830-70f8-35e8-9d24-6eb9.ngrok-free.app/api/concerts?page=1';
+  'https://ad4c-2001-861-d36-f830-fcaf-970d-5558-63d1.ngrok-free.app/api/concerts?page=1';
 
 const Programmation2 = () => {
   const [concerts, setConcerts] = useState([]);
@@ -19,8 +19,7 @@ const Programmation2 = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedHour, setSelectedHour] = useState(null);
 
-  //requete ajax pour récupérer les concerts
-
+  // Fetch concerts from API
   useEffect(() => {
     axios
       .get(api)
@@ -32,18 +31,18 @@ const Programmation2 = () => {
       });
   }, []);
 
-  //gestion des concerts si filtrés
+  // Filter concerts based on selected filters
   const getFilteredConcerts = () => {
     return concerts.filter(concert => {
       if (selectedScene && concert.scene !== selectedScene) {
         return false;
       }
-      if (selectedDate && !concert.date.startsWith(selectedDate)) {
+      if (selectedDate && !concert.Date.startsWith(selectedDate)) {
         return false;
       }
       if (
         selectedHour &&
-        new Date(concert.horaire).getUTCHours() !== parseInt(selectedHour, 10)
+        new Date(concert.Horaire).getUTCHours() !== parseInt(selectedHour, 10)
       ) {
         return false;
       }
@@ -51,16 +50,31 @@ const Programmation2 = () => {
     });
   };
 
-  //affichage des concerts
+  const filteredConcerts = getFilteredConcerts();
+
+  // Render filtered concerts
   const renderPosts = () => {
     if (filteredConcerts.length === 0) {
       return <Text>Aucun évènement prévu au moment sélectionné</Text>;
     }
+
+    return filteredConcerts.map(concert => (
+      <TouchableOpacity
+        key={concert.id}
+        onPress={() => Linking.openURL(concert['@id'])}
+        style={style.postContainer}>
+        <View style={style.timeContainer}>
+          <Text style={style.hours}>
+            {new Date(concert.Horaire).getUTCHours()}h
+          </Text>
+        </View>
+        <View style={style.titleContainer}>
+          <Text style={style.post}>{concert.artiste.name}</Text>
+        </View>
+      </TouchableOpacity>
+    ));
   };
 
-  const filteredConcerts = getFilteredConcerts();
-
-  //rendu des concerts filtrés
   return (
     <ScrollView>
       <View>
@@ -69,9 +83,9 @@ const Programmation2 = () => {
           onValueChange={value => setSelectedScene(value)}
           style={style.picker}>
           <Picker.Item label="Scènes" value={null} />
-          <Picker.Item label="Scene 1" value="/api/scenes/1" />
-          <Picker.Item label="Scene 2" value="/api/scenes/2" />
-          <Picker.Item label="Scene 3" value="/api/scenes/3" />
+          <Picker.Item label="Scene 1" value="/api/scenes/2" />
+          <Picker.Item label="Scene 2" value="/api/scenes/3" />
+          <Picker.Item label="Scene 3" value="/api/scenes/4" />
         </Picker>
         <Picker
           selectedValue={selectedDate}
@@ -92,21 +106,6 @@ const Programmation2 = () => {
           <Picker.Item label="17h" value="17" />
         </Picker>
         {renderPosts()}
-        {filteredConcerts.map(concert => (
-          <TouchableOpacity
-            key={concert.id}
-            onPress={() => Linking.openURL(concert['@id'])}
-            style={style.postContainer}>
-            <View style={style.timeContainer}>
-              <Text style={style.hours}>
-                {new Date(concert.Horaire).getHours()}h
-              </Text>
-            </View>
-            <View style={style.titleContainer}>
-              <Text style={style.post}>{concert.artiste.name}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
       </View>
     </ScrollView>
   );

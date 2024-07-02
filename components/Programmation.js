@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -7,54 +7,58 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import axios from 'axios';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 function HomeProg() {
   const [concerts, setConcerts] = useState([]);
+  const [error, setError] = useState(null);
   const navigation = useNavigation();
 
-  //requetes api pour récupérer les concerts
   useEffect(() => {
     axios
       .get(
-        'https://e7c7-2001-861-d36-f830-70f8-35e8-9d24-6eb9.ngrok-free.app/api/concerts?page=1',
+        'https://ad4c-2001-861-d36-f830-fcaf-970d-5558-63d1.ngrok-free.app/api/concerts?page=1',
       )
       .then(res => {
         setConcerts(res.data['hydra:member']);
+      })
+      .catch(err => {
+        setError("Error fetching concerts: " + err.message);
       });
   }, []);
 
-  //affichage aléatire de 5 concerts
   const getRandomConcerts = count => {
     if (count > concerts.length) {
       count = concerts.length;
     }
-    const shuffledConcerts = concerts.sort(() => Math.random() - 0.5);
+    const shuffledConcerts = [...concerts].sort(() => Math.random() - 0.5);
     return shuffledConcerts.slice(0, count);
   };
 
   const randomConcerts = getRandomConcerts(5);
 
-  //rendu des 5 concerts
+  const handlePress = () => {
+    navigation.navigate('Programmation');
+  };
+
   return (
     <View style={styles.page}>
       <Text style={styles.titre}>A VENIR</Text>
-      <TouchableOpacity onPress={handlePress}>
-        <ScrollView>
-          {randomConcerts.map(concert => (
-            <Text style={styles.groupes} key={concert.id}>
-              {concert.artiste}
-            </Text>
-          ))}
-        </ScrollView>
-      </TouchableOpacity>
+      {error ? (
+        <Text style={styles.error}>{error}</Text>
+      ) : (
+        <TouchableOpacity onPress={handlePress}>
+          <ScrollView>
+            {randomConcerts.map(concert => (
+              <Text style={styles.groupes} key={concert.id}>
+                {concert.artiste.name} {/* Adjust this line based on the actual data structure */}
+              </Text>
+            ))}
+          </ScrollView>
+        </TouchableOpacity>
+      )}
     </View>
   );
-
-  //lien vers la page programmation
-  function handlePress() {
-    navigation.navigate('Programmation');
-  }
 }
 
 const styles = StyleSheet.create({
@@ -77,6 +81,11 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     color: 'white',
     marginBottom: 10,
+  },
+  error: {
+    color: 'red',
+    textAlign: 'center',
+    marginVertical: 10,
   },
 });
 
